@@ -108,22 +108,23 @@ pub fn init(b: *Build, user_config: ?UserConfig, toolchains: ToolchainVersions) 
 }
 
 pub const ToolchainVersions = struct {
-    build_tools_version: []const u8 = "33.0.1",
-    ndk_version: []const u8 = "25.1.8937393",
+    build_tools_version: []const u8 = "35.0.1",
+    ndk_version: []const u8 = "28.0.12916984",
 };
 
 pub const AndroidVersion = enum(u16) {
-    android4 = 19, // KitKat
-    android5 = 21, // Lollipop
-    android6 = 23, // Marshmallow
-    android7 = 24, // Nougat
-    android8 = 26, // Oreo
-    android9 = 28, // Pie
-    android10 = 29, // Quince Tart
-    android11 = 30, // Red Velvet Cake
-    android12 = 31, // Snow Cone
-    android13 = 33, // Tiramisu
-
+    @"4" = 19, // KitKat
+    @"5" = 21, // Lollipop
+    @"6" = 23, // Marshmallow
+    @"7" = 24, // Nougat
+    @"8" = 26, // Oreo
+    @"9" = 28, // Pie
+    @"10" = 29, // Quince Tart
+    @"11" = 30, // Red Velvet Cake
+    @"12" = 31, // Snow Cone
+    @"13" = 33, // Tiramisu
+    @"14" = 34, // UpsideDownCake
+    @"15" = 35, // 
     _, // we allow to overwrite the defaults
 };
 
@@ -180,7 +181,7 @@ pub const AppConfig = struct {
 
     /// The android version which is embedded in the manifset.
     /// The default is Android 9, it's more than 4 years old by now and should be widespread enough to be a reasonable default.
-    target_version: AndroidVersion = .android9,
+    target_version: AndroidVersion = .@"9",
 
     /// The resource directory that will contain the manifest and other app resources.
     /// This should be a distinct directory per app.
@@ -877,7 +878,7 @@ pub fn compileAppLibrary(
     exe.bundle_compiler_rt = true;
     exe.export_table = true;
 
-    exe.defineCMacro("ANDROID", null);
+    exe.root_module.addCMacro("ANDROID", "");
 
     exe.linkLibC();
     for (app_config.libraries) |lib| {

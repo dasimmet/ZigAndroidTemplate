@@ -9,7 +9,24 @@ pub fn build(b: *std.Build) !void {
     // Default-initialize SDK
     const sdk = Sdk.init(b, null, .{});
     const mode = b.standardOptimizeOption(.{});
-    const android_version = b.option(Sdk.AndroidVersion, "android", "Select the android version, default is 'android5'") orelse .android5;
+    const android_version = b.option(
+        Sdk.AndroidVersion,
+        "android",
+        "Select the android version, default is 'android5'",
+    ) orelse .@"5";
+
+    const keystore_file = b.option(
+        []const u8,
+        "keystore-file",
+        "path to a keystore for signing",
+    ) orelse ".build_config/android.keystore";
+
+    const keystore_password = b.option(
+        []const u8,
+        "keystore-password",
+        "password for the keystore",
+    ) orelse "ziguana";
+
     const aaudio = b.option(bool, "aaudio", "Compile with support for AAudio, default is 'false'") orelse false;
     const opensl = b.option(bool, "opensl", "Compile with support for OpenSL ES, default is 'true'") orelse true;
 
@@ -17,9 +34,9 @@ pub fn build(b: *std.Build) !void {
     // Recommendation: Don't hardcore your password here, everyone can read it.
     // At least not for your production keystore ;)
     const key_store = Sdk.KeyStore{
-        .file = ".build_config/android.keystore",
+        .file = keystore_file,
         .alias = "default",
-        .password = "ziguana",
+        .password = keystore_password,
     };
 
     var libraries = std.ArrayList([]const u8).init(b.allocator);

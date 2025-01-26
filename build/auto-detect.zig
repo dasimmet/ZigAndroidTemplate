@@ -419,7 +419,7 @@ fn findProblemWithAndroidSdk(b: *Build, versions: Sdk.ToolchainVersions, path: [
 
     const build_tools = pathConcat(b, path, "build-tools");
     std.fs.cwd().access(build_tools, .{}) catch |err| {
-        return b.fmt("Cannot access build-tools/, {s}", .{@errorName(err)});
+        return b.fmt("Cannot access build tools at {s}, {s}", .{build_tools, @errorName(err)});
     };
 
     const versioned_tools = pathConcat(b, build_tools, versions.build_tools_version);

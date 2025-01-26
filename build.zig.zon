@@ -1,0 +1,13 @@
+.{
+    .name = "zig-android-sdk",
+    .version = "0.0.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "Sdk.zig",
+        "README.md",
+        "LICENSE",
+        "src",
+    },
+}
+
