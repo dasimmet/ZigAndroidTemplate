@@ -1,0 +1,13 @@
+.{
+    .name = "zig-android-sdk",
+    .version = "0.0.0",
+    .dependencies = .{
+        .@"zig-android-sdk" = .{
+            .path = "../../",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+    },
+}
