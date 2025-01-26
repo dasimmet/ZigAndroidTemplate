@@ -124,7 +124,7 @@ pub const AndroidVersion = enum(u16) {
     @"12" = 31, // Snow Cone
     @"13" = 33, // Tiramisu
     @"14" = 34, // UpsideDownCake
-    @"15" = 35, // 
+    @"15" = 35, //
     _, // we allow to overwrite the defaults
 };
 
@@ -471,7 +471,7 @@ pub fn createApp(
 
         writer.print(
             \\    <application android:debuggable="true" android:hasCode="{[hasCode]}" android:label="@string/app_name" {[theme]s} tools:replace="android:icon,android:theme,android:allowBackup,label" android:icon="@mipmap/icon" >
-            \\        <activity android:configChanges="keyboardHidden|orientation" android:name="android.app.NativeActivity">
+            \\        <activity android:exported="true" android:configChanges="keyboardHidden|orientation" android:name="android.app.NativeActivity">
             \\            <meta-data android:name="android.app.lib_name" android:value="@string/lib_name"/>
             \\            <intent-filter>
             \\                <action android:name="android.intent.action.MAIN"/>
@@ -589,9 +589,14 @@ pub fn createApp(
     align_step.step.dependOn(&make_unsigned_apk.step);
     const apk_file = align_step.addOutputFileArg(apk_filename);
 
-    const java_dir = sdk.b.getInstallPath(.lib, "java");
+    const java_dir = sdk.b.getInstallPath(
+        .lib,
+        "java",
+    );
     if (java_files_opt) |java_files| {
-        const d8_cmd_builder = sdk.b.addSystemCommand(&[_][]const u8{sdk.system_tools.d8});
+        const d8_cmd_builder = sdk.b.addSystemCommand(&[_][]const u8{
+            sdk.system_tools.d8,
+        });
 
         d8_cmd_builder.addArg("--lib");
         d8_cmd_builder.addArg(root_jar);
@@ -608,7 +613,10 @@ pub fn createApp(
 
             const name = std.fs.path.stem(java_file);
             const name_ext = sdk.b.fmt("{s}.class", .{name});
-            const class_file = std.fs.path.resolve(sdk.b.allocator, &[_][]const u8{ java_dir, name_ext }) catch unreachable;
+            const class_file = std.fs.path.resolve(
+                sdk.b.allocator,
+                &[_][]const u8{ java_dir, name_ext },
+            ) catch unreachable;
 
             d8_cmd_builder.addFileArg(sdk.b.path(class_file));
             d8_cmd_builder.step.dependOn(&javac_cmd.step);
